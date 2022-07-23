@@ -1,3 +1,7 @@
+html {
+  background-color: #f3f2ef;
+}
+
 .App {
   text-align: center;
 }
@@ -41,4 +45,36 @@
   width: 100%;
   height: 65vh;
   z-index: 1;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 3px 0;
+  background-color: white;
+}
+
+.red-marker {
+  background-image: url('/public/camera.svg');
+  background-color: #f00;
+  border-radius: 5rem;
+  border: 1px solid white;
+  padding: 0.4rem;
+  box-shadow: 3px 3px 10px #f52440;
+}
+
+.black-marker {
+  background-image: url('/public/camera.svg');
+  background-color: #000;
+  border-radius: 5rem;
+  border: 1px solid white;
+  padding: 0.4rem;
+  box-shadow: 3px 3px 10px #363535;
+}
+
+.purple-marker {
+  background-image: url('/public/camera.svg');
+  background-color: rgb(173, 25, 236);
+  border-radius: 5rem;
+  border: 1px solid white;
+  padding: 0.4rem;
+  box-shadow: 3px 3px 10px #ee6cec;
 }
