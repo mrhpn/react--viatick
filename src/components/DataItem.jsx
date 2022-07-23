@@ -5,7 +5,9 @@ function DataItem({ Icon, name, count, color = 'black' }) {
     <div className="inline-flex items-center p-2 px-3 m-2 border shadow-md rounded-lg">
       <Icon size={28} style={{ color }} />
       <div className="flex-col pl-3">
-        <div style={{ color }}>{count}</div>
+        <div className="font-bold" style={{ color }}>
+          {count}
+        </div>
         <span className="text-gray-400 text-sm">{name}</span>
       </div>
     </div>
