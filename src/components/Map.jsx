@@ -1,29 +1,37 @@
 import React, { useEffect } from 'react';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
-import { Icon, DivIcon } from 'leaflet';
+import {
+  MapContainer,
+  TileLayer,
+  useMap,
+  Marker,
+  Popup,
+  Polyline,
+} from 'react-leaflet';
+import { DivIcon } from 'leaflet';
+import L from 'leaflet';
+import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
-const customIcon = new Icon({
-  iconUrl: '/camera.svg',
-  iconSize: [23, 23],
-});
+function Map({ pins, filteredItems }) {
+  const linePositions = filteredItems.map((item) => [item.long, item.lang]);
 
-const iconRed = new DivIcon({
-  className: 'red-marker',
-  iconSize: [23, 23],
-});
+  function prepareMarker(isAlert, pinId) {
+    let markerColor;
+    let markerClass;
 
-const iconBlack = new DivIcon({
-  className: 'black-marker',
-  iconSize: [23, 23],
-});
+    if (isAlert) markerColor = 'red';
+    else markerColor = 'black';
 
-const iconPurple = new DivIcon({
-  className: 'purple-marker',
-  iconSize: [23, 23],
-});
+    markerClass = `${markerColor}-marker`;
 
-function Map({ pins }) {
-  //let long, lang;
+    let filteredItem = filteredItems.find((item) => item.pinId === pinId);
+    if (filteredItem) markerClass += ' filtered-marker';
+
+    return new DivIcon({
+      className: markerClass,
+      iconSize: [23, 23],
+      iconAnchor: [16, 24],
+    });
+  }
 
   return (
     <MapContainer
@@ -36,28 +44,35 @@ function Map({ pins }) {
       />
       {pins.length &&
         pins.map((pin) => (
-          <Marker
-            key={pin.pinId}
-            position={[pin.long, pin.lang]}
-            icon={pin.isAlert ? iconRed : iconBlack}>
-            <Popup>
-              <div>
-                <h2 className="font-bold h1">{pin.name}</h2>
-                <span className="block italic text-xs text-gray-500">
-                  Department: {pin.department.name}
-                </span>
-                <span className="block italic text-xs text-gray-500">
-                  Group: {pin.group.name}
-                </span>
-                <span className="text-gray-700 mt-3 block">{pin.remarks}</span>
-                <img
-                  className="block mt-3 rounded"
-                  src={pin.image}
-                  alt={pin.name}
-                />
-              </div>
-            </Popup>
-          </Marker>
+          <>
+            <Marker
+              key={pin.pinId}
+              title={pin.name}
+              alt={pin.name}
+              position={[pin.long, pin.lang]}
+              icon={prepareMarker(pin.isAlert, pin.pinId)}>
+              <Popup>
+                <div>
+                  <h2 className="font-bold h1">{pin.name}</h2>
+                  <span className="block italic text-xs text-gray-500">
+                    Department: {pin.department.name}
+                  </span>
+                  <span className="block italic text-xs text-gray-500">
+                    Group: {pin.group.name}
+                  </span>
+                  <span className="text-gray-700 mt-3 block">
+                    {pin.remarks}
+                  </span>
+                  <img
+                    className="block mt-3 rounded"
+                    src={pin.image}
+                    alt={pin.name}
+                  />
+                </div>
+              </Popup>
+            </Marker>
+            <Polyline positions={[linePositions]} color="purple" />
+          </>
         ))}
     </MapContainer>
   );

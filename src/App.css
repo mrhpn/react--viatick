@@ -52,29 +52,33 @@ html {
   background-color: white;
 }
 
+.filtered-marker {
+  border-radius: 0 !important;
+}
+
 .red-marker {
   background-image: url('/public/camera.svg');
-  background-color: #f00;
+  background-color: rgb(239, 36, 93);
   border-radius: 5rem;
-  border: 1px solid white;
-  padding: 0.4rem;
-  box-shadow: 3px 3px 10px #f52440;
+  border: 5px solid rgb(239, 36, 93);
+  padding: 0.8rem;
+  box-shadow: 3px 3px 20px rgb(239, 36, 93);
 }
 
 .black-marker {
   background-image: url('/public/camera.svg');
   background-color: #000;
   border-radius: 5rem;
-  border: 1px solid white;
-  padding: 0.4rem;
-  box-shadow: 3px 3px 10px #363535;
+  border: 5px solid black;
+  padding: 0.8rem;
+  box-shadow: 3px 3px 20px #363535;
 }
 
 .purple-marker {
   background-image: url('/public/camera.svg');
   background-color: rgb(173, 25, 236);
   border-radius: 5rem;
-  border: 1px solid white;
-  padding: 0.4rem;
+  border: 5px solid ee6cec;
+  padding: 0.8rem;
   box-shadow: 3px 3px 10px #ee6cec;
 }
