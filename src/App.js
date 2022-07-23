@@ -1,10 +1,15 @@
 import './App.css';
+import { HiCamera, HiHand } from 'react-icons/hi';
+import DataItem from './components/DataItem';
 
 function App() {
   return (
-    <h1 className="text-3xl font-bold underline text-green-400">
-      Hello world!
-    </h1>
+    <div className="container mx-auto">
+      <div className="row-auto">
+        <DataItem Icon={HiCamera} name="Camera" count={11} />
+        <DataItem Icon={HiHand} name="Active Alert" count={2} color="red" />
+      </div>
+    </div>
   );
 }
 
