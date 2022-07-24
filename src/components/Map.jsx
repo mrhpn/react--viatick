@@ -30,6 +30,7 @@ function Map({ pins, filteredItems }) {
       className: markerClass,
       iconSize: [23, 23],
       iconAnchor: [16, 24],
+      popupAnchor: [0, -15],
     });
   }
 
