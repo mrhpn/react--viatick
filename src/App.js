@@ -76,7 +76,7 @@ function App() {
           <input
             type="text"
             id="input-group-1"
-            className="inline-flex shadow appearance-none w-64 border text-gray-900 text-sm rounded-lg pl-10 p-2.5 focus:outline-none"
+            className="inline-flex shadow w-64 border-gray-200 text-gray-900 text-sm rounded-lg pl-10 p-2.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
             placeholder="Search by name of camera..."
           />
         </div>
