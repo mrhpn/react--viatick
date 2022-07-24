@@ -94,6 +94,7 @@ function App() {
           Icon={HiSearchCircle}
           value={searchValue}
           placeholder="Search by name of camera..."
+          totalItemFound={filteredItems?.length}
           onChange={handleSearch}
         />
 
@@ -103,6 +104,7 @@ function App() {
             { label: 'Groups', data: groups },
           ]}
           selectedItem={selectedItem}
+          totalItemFound={filteredItems?.length}
           onSelect={(e) => handleFilter(e)}
         />
 

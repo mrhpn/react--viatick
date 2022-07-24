@@ -42,37 +42,32 @@ function Map({ pins, filteredItems }) {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      {pins.length &&
+      {pins?.length &&
         pins.map((pin) => (
-          <>
+          <div key={pin.pinId}>
             <Marker
-              key={pin.pinId}
               title={pin.name}
               alt={pin.name}
               position={[pin.long, pin.lang]}
               icon={prepareMarker(pin.isAlert, pin.pinId)}>
               <Popup>
-                <div>
-                  <h2 className="font-bold h1">{pin.name}</h2>
-                  <span className="block italic text-xs text-gray-500">
-                    Department: {pin.department.name}
-                  </span>
-                  <span className="block italic text-xs text-gray-500">
-                    Group: {pin.group.name}
-                  </span>
-                  <span className="text-gray-700 mt-3 block">
-                    {pin.remarks}
-                  </span>
-                  <img
-                    className="block mt-3 rounded"
-                    src={pin.image}
-                    alt={pin.name}
-                  />
-                </div>
+                <h2 className="font-bold h1">{pin.name}</h2>
+                <span className="block italic text-xs text-gray-500">
+                  Department: {pin.department.name}
+                </span>
+                <span className="block italic text-xs text-gray-500">
+                  Group: {pin.group.name}
+                </span>
+                <span className="text-gray-700 mt-3 block">{pin.remarks}</span>
+                <img
+                  className="block mt-3 rounded"
+                  src={pin.image}
+                  alt={pin.name}
+                />
               </Popup>
             </Marker>
             <Polyline positions={[linePositions]} color="purple" />
-          </>
+          </div>
         ))}
     </MapContainer>
   );
