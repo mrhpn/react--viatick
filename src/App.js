@@ -10,6 +10,7 @@ import pinService from './services/pin';
 import departmentService from './services/department';
 import groupService from './services/group';
 import IconButton from './components/IconButton';
+import FormInput from './components/FormInput';
 
 function App() {
   const [pins, setPins] = useState([]);
@@ -17,6 +18,7 @@ function App() {
   const [groups, setGroups] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
   const [selectedItem, setSelectedItem] = useState('');
+  const [searchValue, setSearchValue] = useState('');
 
   const getPins = async () => {
     const { data } = await pinService.getAll();
@@ -52,8 +54,27 @@ function App() {
 
   const handleClear = () => {
     setSelectedItem('');
+    setSearchValue('');
     setFilteredItems([]);
   };
+
+  const handleSearch = (e) => {
+    setSelectedItem('');
+
+    const searchString = e.target?.value;
+    if ('' === searchString) setFilteredItems([]);
+    setSearchValue(searchString);
+
+    setFilteredItems(
+      pins.filter((pin) =>
+        pin.name.toLowerCase().includes(searchString.toLowerCase())
+      )
+    );
+  };
+
+  useEffect(() => {
+    if ('' === searchValue) setFilteredItems([]);
+  }, [searchValue]);
 
   return (
     <div className="container mx-auto mt-10">
@@ -69,17 +90,12 @@ function App() {
         />
       </div>
       <div className="flex my-3">
-        <div className="relative ml-2 inline-flex">
-          <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-            <HiSearchCircle size={20} color="#808080" />
-          </div>
-          <input
-            type="text"
-            id="input-group-1"
-            className="inline-flex shadow w-64 border-gray-200 text-gray-900 text-sm rounded-lg pl-10 p-2.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-            placeholder="Search by name of camera..."
-          />
-        </div>
+        <FormInput
+          Icon={HiSearchCircle}
+          value={searchValue}
+          placeholder="Search by name of camera..."
+          onChange={handleSearch}
+        />
 
         <MultiSourceSelect
           data={[
@@ -96,7 +112,7 @@ function App() {
       </div>
       <div
         id="map"
-        className="row-auto m-2 border shadow-md rounded-lg leaflet-container">
+        className="row-auto m-2 border border-gray-200 shadow-md rounded-lg leaflet-container">
         <Map pins={pins} filteredItems={filteredItems} />
       </div>
     </div>
