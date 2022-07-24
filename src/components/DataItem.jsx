@@ -1,6 +1,6 @@
 import React from 'react';
 
-function DataItem({ Icon, name, count, color = 'black' }) {
+function DataItem({ Icon, name, count, color = '#353333' }) {
   return (
     <div className="inline-flex items-center p-2 px-3 my-2 mr-4 border shadow-md rounded-lg bg-white">
       <Icon size={28} style={{ color }} />

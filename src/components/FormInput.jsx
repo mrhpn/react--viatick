@@ -5,17 +5,15 @@ function FormInput({ Icon, value, placeholder, totalItemFound = 0, onChange }) {
     <>
       <div className="flex flex-col self-end">
         {value !== '' && totalItemFound > 0 ? (
-          <span className="text-xs ml-2 text-green-500 mb-1">
+          <span className="text-xs ml-2 text-green-500">
             {totalItemFound} match(es) found
           </span>
         ) : (
           value !== '' && (
-            <span className="text-xs ml-2 text-gray-500 mb-1">
-              No match found
-            </span>
+            <span className="text-xs ml-2 text-gray-500">No match found</span>
           )
         )}
-        <div className="relative inline-flex">
+        <div className="relative inline-flex mt-1">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <Icon size={20} color="#808080" />
           </div>

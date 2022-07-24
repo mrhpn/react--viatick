@@ -1,5 +1,4 @@
 import React from 'react';
-import { HiPlusCircle } from 'react-icons/hi';
 
 const Modal = ({
   isOpen,

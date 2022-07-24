@@ -1,24 +1,25 @@
-import './App.css';
 import 'flowbite';
+import './App.css';
 import React, { useState, useEffect } from 'react';
 import {
-  HiCamera,
+  HiVideoCamera,
   HiHand,
   HiSearchCircle,
   HiTrash,
-  HiPlusCircle,
+  HiFolderAdd,
+  HiX,
+  HiXCircle,
 } from 'react-icons/hi';
 
 import DataItem from './components/DataItem';
 import Map from './components/Map';
 import MultiSourceSelect from './components/MultiSourceSelect';
-import pinService from './services/pin';
-import departmentService from './services/department';
-import groupService from './services/group';
 import Button from './components/Button';
 import FormInput from './components/FormInput';
 import Modal from './components/Modal';
-import { filter } from 'lodash';
+import pinService from './services/pin';
+import departmentService from './services/department';
+import groupService from './services/group';
 
 function App() {
   const [pins, setPins] = useState([]);
@@ -56,6 +57,7 @@ function App() {
   }, []);
 
   const handleFilter = (e) => {
+    setSelectedItems([]);
     let filterValue = e.target.value; // D1 || G1
     setFilteredItem(filterValue);
     setFilteredItems(
@@ -73,6 +75,7 @@ function App() {
   };
 
   const handleSearch = (e) => {
+    setSelectedItems([]);
     setFilteredItem('');
 
     const searchString = e.target?.value;
@@ -99,8 +102,9 @@ function App() {
         const result = await groupService.create([groupName, selectedItems]);
         if (200 === result.status) {
           cleanUpCreateModalForm();
-          setFilteredItem(groupName);
           setSelectedItems([]);
+          setFilteredItem(groupName);
+          showRecentlyCreatedGroup();
         }
       }
     } catch (error) {
@@ -113,6 +117,14 @@ function App() {
     setGroupCreateButtonDisabled(true);
     setGroupCreateErrorMsg('');
     setCreateGroupModalVisible(false);
+  }
+
+  async function showRecentlyCreatedGroup() {
+    const { data } = await pinService.getAll();
+    const updatedFilteredPins = data.pins.filter(
+      (pin) => pin.group.name === groupName
+    );
+    setFilteredItems(updatedFilteredPins);
   }
 
   const handleCreateGroupInputChange = (e) => {
@@ -137,14 +149,14 @@ function App() {
   return (
     <div className="container mx-auto mt-10">
       <div className="row-auto mb-3">
-        <DataItem Icon={HiCamera} name="Camera" count={pins.length} />
+        <DataItem Icon={HiVideoCamera} name="Camera" count={pins.length} />
         <DataItem
           Icon={HiHand}
           name="Active Alert"
           count={
             pins.length && pins.filter((pin) => pin.isAlert === true).length
           }
-          color="red"
+          color="#EF235C"
         />
       </div>
       <div className="flex justify-between my-3 mt-5">
@@ -172,12 +184,19 @@ function App() {
           )}
         </div>
         {selectedItems.length > 1 && (
-          <Button
-            Icon={HiPlusCircle}
-            title="Create Group"
-            text="Create Group"
-            onClick={() => setCreateGroupModalVisible(true)}
-          />
+          <div>
+            <Button
+              Icon={HiFolderAdd}
+              title="Create Group"
+              text="Create Group"
+              onClick={() => setCreateGroupModalVisible(true)}
+            />
+            <Button
+              Icon={HiX}
+              title="Clear selections"
+              onClick={() => setSelectedItems([])}
+            />
+          </div>
         )}
       </div>
       <div
@@ -191,13 +210,13 @@ function App() {
         />
       </div>
       <Modal
-        value={groupName}
-        onChange={(e) => handleCreateGroupInputChange(e)}
-        isOpen={createGroupModalVisible}
         title="Create Group"
-        errorMessage={groupCreateErrorMsg}
-        submitButtonDisabled={groupCreateButtonDisabled}
+        value={groupName}
         data={['camera(s) selected', selectedItems]}
+        isOpen={createGroupModalVisible}
+        submitButtonDisabled={groupCreateButtonDisabled}
+        errorMessage={groupCreateErrorMsg}
+        onChange={(e) => handleCreateGroupInputChange(e)}
         onClose={() => setCreateGroupModalVisible(false)}
         onSubmit={(e) => handleCreateGroup(e)}
       />

@@ -13,14 +13,11 @@ function Map({ pins, filteredItems, selectedItems, setSelectedItems }) {
   const linePositions = filteredItems.map((item) => [item.long, item.lang]);
 
   function prepareMarker(isAlert, pinId, isSelected = false) {
-    let markerColor;
     let markerClass;
 
-    if ((isAlert && isSelected) || isSelected) markerColor = 'purple';
-    else if (isAlert) markerColor = 'red';
-    else markerColor = 'black';
-
-    markerClass = `${markerColor}-marker`;
+    if ((isAlert && isSelected) || isSelected) markerClass = 'purple-marker';
+    else if (isAlert) markerClass = 'red-marker';
+    else markerClass = 'black-marker';
 
     let filteredItem = filteredItems.find((item) => item.pinId === pinId);
     if (filteredItem) markerClass += ' filtered-marker';
@@ -71,6 +68,7 @@ function Map({ pins, filteredItems, selectedItems, setSelectedItems }) {
                   if (e.originalEvent.shiftKey) {
                     const pinId = e.target.options?.pinId;
                     const name = e.target.options?.title;
+
                     if (
                       e.sourceTarget.options.icon.options.className ===
                       'purple-marker'
