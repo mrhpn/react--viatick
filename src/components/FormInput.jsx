@@ -21,7 +21,7 @@ function FormInput({ Icon, value, placeholder, totalItemFound = 0, onChange }) {
             value={value}
             onChange={onChange}
             type="text"
-            className="inline-flex shadow w-64 border-gray-200 text-gray-900 text-sm rounded-lg pl-10 p-2.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+            className="inline-flex shadow w-40 md:w-64 border-gray-200 text-gray-900 text-sm rounded-lg pl-10 p-2.5 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
             placeholder={placeholder}
           />
         </div>

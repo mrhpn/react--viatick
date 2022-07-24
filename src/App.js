@@ -158,12 +158,12 @@ function App() {
           color="#EF235C"
         />
       </div>
-      <div className="flex justify-between my-3 mt-5">
-        <div className="flex">
+      <div className="flex flex-wrap justify-between my-3 mt-5">
+        <div className="flex w-full md:w-auto">
           <FormInput
             Icon={HiSearchCircle}
             value={searchValue}
-            placeholder="Search by name of camera..."
+            placeholder="Search by name..."
             totalItemFound={filteredItems?.length}
             onChange={handleSearch}
           />
@@ -179,22 +179,26 @@ function App() {
           />
 
           {filteredItems.length > 0 && (
-            <Button Icon={HiTrash} title="Clear" onClick={handleClear} />
+            <div className="ml-4 self-end">
+              <Button Icon={HiTrash} title="Clear" onClick={handleClear} />
+            </div>
           )}
         </div>
         {selectedItems.length > 1 && (
-          <div>
+          <div className="w-full mt-3 md:w-auto md:mt-0">
             <Button
               Icon={HiFolderAdd}
               title="Create Group"
               text="Create Group"
               onClick={() => setCreateGroupModalVisible(true)}
             />
-            <Button
-              Icon={HiX}
-              title="Clear selections"
-              onClick={() => setSelectedItems([])}
-            />
+            <div className="ml-4 inline">
+              <Button
+                Icon={HiX}
+                title="Clear selections"
+                onClick={() => setSelectedItems([])}
+              />
+            </div>
           </div>
         )}
       </div>
