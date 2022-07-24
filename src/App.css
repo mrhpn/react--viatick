@@ -78,7 +78,7 @@ html {
   background-image: url('/public/camera.svg');
   background-color: rgb(173, 25, 236);
   border-radius: 5rem;
-  border: 5px solid ee6cec;
+  border: 5px solid rgb(173, 25, 236);
   padding: 0.8rem;
   box-shadow: 3px 3px 10px #ee6cec;
 }

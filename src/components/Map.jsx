@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MapContainer,
   TileLayer,
@@ -6,19 +6,25 @@ import {
   Marker,
   Popup,
   Polyline,
+  LayersControl,
 } from 'react-leaflet';
 import { DivIcon } from 'leaflet';
 import L from 'leaflet';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
 function Map({ pins, filteredItems }) {
+  const [selectedItems, setSelectedItems] = useState([]);
+
   const linePositions = filteredItems.map((item) => [item.long, item.lang]);
 
-  function prepareMarker(isAlert, pinId) {
+  useEffect(() => {}, [selectedItems]);
+
+  function prepareMarker(isAlert, pinId, isSelected = false) {
     let markerColor;
     let markerClass;
 
-    if (isAlert) markerColor = 'red';
+    if (isAlert && isSelected) markerColor = 'purple';
+    else if (isAlert) markerColor = 'red';
     else markerColor = 'black';
 
     markerClass = `${markerColor}-marker`;
@@ -39,18 +45,43 @@ function Map({ pins, filteredItems }) {
       center={[1.3644, 103.75259]}
       zoom={16}
       scrollWheelZoom={false}>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
+      <LayersControl position="topright">
+        <LayersControl.BaseLayer checked name="Basic Map">
+          <TileLayer
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+        </LayersControl.BaseLayer>
+        <LayersControl.BaseLayer name="Topo Map">
+          <TileLayer
+            attribution='Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+            url="https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"
+          />
+        </LayersControl.BaseLayer>
+      </LayersControl>
+
       {pins?.length &&
         pins.map((pin) => (
           <div key={pin.pinId}>
             <Marker
+              pinId={pin.pinId}
               title={pin.name}
               alt={pin.name}
               position={[pin.long, pin.lang]}
-              icon={prepareMarker(pin.isAlert, pin.pinId)}>
+              icon={prepareMarker(
+                pin.isAlert,
+                pin.pinId,
+                selectedItems.includes(pin.pinId)
+              )}
+              eventHandlers={{
+                click: (e) => {
+                  if (e.originalEvent.shiftKey)
+                    setSelectedItems([
+                      ...selectedItems,
+                      e.target.options?.pinId,
+                    ]);
+                },
+              }}>
               <Popup>
                 <h2 className="font-bold h1">{pin.name}</h2>
                 <span className="block italic text-xs text-gray-500">
