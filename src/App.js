@@ -1,7 +1,13 @@
 import './App.css';
 import 'flowbite';
 import React, { useState, useEffect } from 'react';
-import { HiCamera, HiHand, HiSearchCircle, HiTrash } from 'react-icons/hi';
+import {
+  HiCamera,
+  HiHand,
+  HiSearchCircle,
+  HiTrash,
+  HiPlusCircle,
+} from 'react-icons/hi';
 
 import DataItem from './components/DataItem';
 import Map from './components/Map';
@@ -9,7 +15,7 @@ import MultiSourceSelect from './components/MultiSourceSelect';
 import pinService from './services/pin';
 import departmentService from './services/department';
 import groupService from './services/group';
-import IconButton from './components/IconButton';
+import Button from './components/Button';
 import FormInput from './components/FormInput';
 
 function App() {
@@ -17,8 +23,9 @@ function App() {
   const [departments, setDepartments] = useState([]);
   const [groups, setGroups] = useState([]);
   const [filteredItems, setFilteredItems] = useState([]);
-  const [selectedItem, setSelectedItem] = useState('');
+  const [filteredItem, setFilteredItem] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const getPins = async () => {
     const { data } = await pinService.getAll();
@@ -43,7 +50,7 @@ function App() {
 
   const handleFilter = (e) => {
     let filterValue = e.target.value; // D1 || G1
-    setSelectedItem(filterValue);
+    setFilteredItem(filterValue);
     setFilteredItems(
       pins.filter(
         (pin) =>
@@ -53,13 +60,13 @@ function App() {
   };
 
   const handleClear = () => {
-    setSelectedItem('');
+    setFilteredItem('');
     setSearchValue('');
     setFilteredItems([]);
   };
 
   const handleSearch = (e) => {
-    setSelectedItem('');
+    setFilteredItem('');
 
     const searchString = e.target?.value;
     if ('' === searchString) setFilteredItems([]);
@@ -71,6 +78,8 @@ function App() {
       )
     );
   };
+
+  const handleMultiSelect = (_selectedItems) => {};
 
   useEffect(() => {
     if ('' === searchValue) setFilteredItems([]);
@@ -89,33 +98,48 @@ function App() {
           color="red"
         />
       </div>
-      <div className="flex my-3">
-        <FormInput
-          Icon={HiSearchCircle}
-          value={searchValue}
-          placeholder="Search by name of camera..."
-          totalItemFound={filteredItems?.length}
-          onChange={handleSearch}
-        />
+      <div className="flex justify-between my-3 mt-5">
+        <div className="flex">
+          <FormInput
+            Icon={HiSearchCircle}
+            value={searchValue}
+            placeholder="Search by name of camera..."
+            totalItemFound={filteredItems?.length}
+            onChange={handleSearch}
+          />
 
-        <MultiSourceSelect
-          data={[
-            { label: 'Department', data: departments },
-            { label: 'Groups', data: groups },
-          ]}
-          selectedItem={selectedItem}
-          totalItemFound={filteredItems?.length}
-          onSelect={(e) => handleFilter(e)}
-        />
+          <MultiSourceSelect
+            data={[
+              { label: 'Department', data: departments },
+              { label: 'Groups', data: groups },
+            ]}
+            selectedItem={filteredItem}
+            totalItemFound={filteredItems?.length}
+            onSelect={(e) => handleFilter(e)}
+          />
 
-        {filteredItems.length > 0 && (
-          <IconButton Icon={HiTrash} title="Clear" onClick={handleClear} />
+          {filteredItems.length > 0 && (
+            <Button Icon={HiTrash} title="Clear" onClick={handleClear} />
+          )}
+        </div>
+        {selectedItems.length > 1 && (
+          <Button
+            Icon={HiPlusCircle}
+            title="Create Group"
+            text="Create Group"
+            onClick={() => console.log('a')}
+          />
         )}
       </div>
       <div
         id="map"
-        className="row-auto m-2 border border-gray-200 shadow-md rounded-lg leaflet-container">
-        <Map pins={pins} filteredItems={filteredItems} />
+        className="row-auto mt-2 border border-gray-200 shadow-md rounded-lg leaflet-container">
+        <Map
+          pins={pins}
+          filteredItems={filteredItems}
+          selectedItems={selectedItems}
+          setSelectedItems={(items) => setSelectedItems(items)}
+        />
       </div>
     </div>
   );

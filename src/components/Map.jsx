@@ -1,23 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   MapContainer,
   TileLayer,
-  useMap,
   Marker,
   Popup,
   Polyline,
   LayersControl,
 } from 'react-leaflet';
 import { DivIcon } from 'leaflet';
-import L from 'leaflet';
-import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
-function Map({ pins, filteredItems }) {
-  const [selectedItems, setSelectedItems] = useState([]);
-
+function Map({ pins, filteredItems, selectedItems, setSelectedItems }) {
   const linePositions = filteredItems.map((item) => [item.long, item.lang]);
-
-  useEffect(() => {}, [selectedItems]);
 
   function prepareMarker(isAlert, pinId, isSelected = false) {
     let markerColor;
@@ -75,11 +68,19 @@ function Map({ pins, filteredItems }) {
               )}
               eventHandlers={{
                 click: (e) => {
-                  if (e.originalEvent.shiftKey)
-                    setSelectedItems([
-                      ...selectedItems,
-                      e.target.options?.pinId,
-                    ]);
+                  if (e.originalEvent.shiftKey) {
+                    const pinId = e.target.options?.pinId;
+                    if (
+                      e.sourceTarget.options.icon.options.className ===
+                      'purple-marker'
+                    ) {
+                      let index = selectedItems.indexOf(pinId);
+                      if (index > -1) {
+                        selectedItems.splice(index, 1);
+                        setSelectedItems([...selectedItems]);
+                      }
+                    } else setSelectedItems([...selectedItems, pinId]);
+                  }
                 },
               }}>
               <Popup>

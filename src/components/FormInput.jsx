@@ -15,7 +15,7 @@ function FormInput({ Icon, value, placeholder, totalItemFound = 0, onChange }) {
             </span>
           )
         )}
-        <div className="relative ml-2 inline-flex">
+        <div className="relative inline-flex">
           <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <Icon size={20} color="#808080" />
           </div>
