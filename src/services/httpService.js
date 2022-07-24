@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:9000/api';
+axios.defaults.baseURL = 'https://api-viatick.herokuapp.com/api';
 
 const http = {
   get: axios.get,

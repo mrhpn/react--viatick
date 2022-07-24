@@ -8,7 +8,6 @@ import {
   HiTrash,
   HiFolderAdd,
   HiX,
-  HiXCircle,
 } from 'react-icons/hi';
 
 import DataItem from './components/DataItem';
