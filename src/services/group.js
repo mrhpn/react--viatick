@@ -6,6 +6,10 @@ export function getAll() {
   return http.get(apiEndpoint);
 }
 
-const groups = { getAll };
+export function create(data) {
+  return http.post(apiEndpoint, data);
+}
+
+const groups = { getAll, create };
 
 export default groups;

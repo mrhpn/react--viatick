@@ -16,7 +16,7 @@ function Map({ pins, filteredItems, selectedItems, setSelectedItems }) {
     let markerColor;
     let markerClass;
 
-    if (isAlert && isSelected) markerColor = 'purple';
+    if ((isAlert && isSelected) || isSelected) markerColor = 'purple';
     else if (isAlert) markerColor = 'red';
     else markerColor = 'black';
 
@@ -64,22 +64,26 @@ function Map({ pins, filteredItems, selectedItems, setSelectedItems }) {
               icon={prepareMarker(
                 pin.isAlert,
                 pin.pinId,
-                selectedItems.includes(pin.pinId)
+                selectedItems.find((s) => s.pinId === pin.pinId)
               )}
               eventHandlers={{
                 click: (e) => {
                   if (e.originalEvent.shiftKey) {
                     const pinId = e.target.options?.pinId;
+                    const name = e.target.options?.title;
                     if (
                       e.sourceTarget.options.icon.options.className ===
                       'purple-marker'
                     ) {
-                      let index = selectedItems.indexOf(pinId);
+                      let index = selectedItems.findIndex(
+                        (i) => i.pinId === pinId
+                      );
                       if (index > -1) {
                         selectedItems.splice(index, 1);
                         setSelectedItems([...selectedItems]);
                       }
-                    } else setSelectedItems([...selectedItems, pinId]);
+                    } else
+                      setSelectedItems([...selectedItems, { pinId, name }]);
                   }
                 },
               }}>

@@ -17,6 +17,8 @@ import departmentService from './services/department';
 import groupService from './services/group';
 import Button from './components/Button';
 import FormInput from './components/FormInput';
+import Modal from './components/Modal';
+import { filter } from 'lodash';
 
 function App() {
   const [pins, setPins] = useState([]);
@@ -26,6 +28,11 @@ function App() {
   const [filteredItem, setFilteredItem] = useState('');
   const [searchValue, setSearchValue] = useState('');
   const [selectedItems, setSelectedItems] = useState([]);
+  const [createGroupModalVisible, setCreateGroupModalVisible] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [groupCreateButtonDisabled, setGroupCreateButtonDisabled] =
+    useState(true);
+  const [groupCreateErrorMsg, setGroupCreateErrorMsg] = useState('');
 
   const getPins = async () => {
     const { data } = await pinService.getAll();
@@ -79,11 +86,53 @@ function App() {
     );
   };
 
-  const handleMultiSelect = (_selectedItems) => {};
+  const handleCreateGroup = async (e) => {
+    e.preventDefault();
+
+    try {
+      if ('' === groupName) {
+        setGroupCreateErrorMsg('Enter group name');
+        setGroupCreateButtonDisabled(true);
+      } else {
+        setGroupCreateButtonDisabled(false);
+
+        const result = await groupService.create([groupName, selectedItems]);
+        if (200 === result.status) {
+          cleanUpCreateModalForm();
+          setFilteredItem(groupName);
+          setSelectedItems([]);
+        }
+      }
+    } catch (error) {
+      setGroupCreateErrorMsg(error.response.data.message);
+    }
+  };
+
+  function cleanUpCreateModalForm() {
+    setGroupName('');
+    setGroupCreateButtonDisabled(true);
+    setGroupCreateErrorMsg('');
+    setCreateGroupModalVisible(false);
+  }
+
+  const handleCreateGroupInputChange = (e) => {
+    const value = e.target?.value;
+    setGroupName(value);
+
+    if ('' === value) {
+      setGroupCreateErrorMsg('');
+      setGroupCreateButtonDisabled(true);
+    } else setGroupCreateButtonDisabled(false);
+  };
 
   useEffect(() => {
     if ('' === searchValue) setFilteredItems([]);
   }, [searchValue]);
+
+  useEffect(() => {
+    getPins();
+    getGroups();
+  }, [filteredItem]);
 
   return (
     <div className="container mx-auto mt-10">
@@ -127,13 +176,13 @@ function App() {
             Icon={HiPlusCircle}
             title="Create Group"
             text="Create Group"
-            onClick={() => console.log('a')}
+            onClick={() => setCreateGroupModalVisible(true)}
           />
         )}
       </div>
       <div
         id="map"
-        className="row-auto mt-2 border border-gray-200 shadow-md rounded-lg leaflet-container">
+        className="relative row-auto mt-2 border border-gray-200 shadow-md rounded-lg leaflet-container">
         <Map
           pins={pins}
           filteredItems={filteredItems}
@@ -141,6 +190,17 @@ function App() {
           setSelectedItems={(items) => setSelectedItems(items)}
         />
       </div>
+      <Modal
+        value={groupName}
+        onChange={(e) => handleCreateGroupInputChange(e)}
+        isOpen={createGroupModalVisible}
+        title="Create Group"
+        errorMessage={groupCreateErrorMsg}
+        submitButtonDisabled={groupCreateButtonDisabled}
+        data={['camera(s) selected', selectedItems]}
+        onClose={() => setCreateGroupModalVisible(false)}
+        onSubmit={(e) => handleCreateGroup(e)}
+      />
     </div>
   );
 }
