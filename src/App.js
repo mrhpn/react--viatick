@@ -212,6 +212,9 @@ function App() {
           setSelectedItems={(items) => setSelectedItems(items)}
         />
       </div>
+      <div className="text-gray-400 text-sm italic mt-3">
+        To multi-select markers, press `shift` and click on marker.
+      </div>
       <Modal
         title="Create Group"
         value={groupName}
